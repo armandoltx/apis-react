@@ -1,3 +1,4 @@
+import './App.css'
 import {useEffect, useState} from "react"
 
 const CAT_ENDPOINT_RANDOM_FACT = "https://catfact.ninja/fact"
@@ -45,9 +46,11 @@ function App() {
 
   return (
     <>
-      <h1>Random Hechos</h1>
-      {fact && <p>{fact}</p>}
-      {imageUrl && <img src={imageUrl} alt={`Image extracted using the first three words for {fact}`} />}
+      <main>
+        <h1>Random Hechos</h1>
+        {fact && <p>{fact}</p>}
+        {imageUrl && <img src={imageUrl} alt={`Image extracted using the first three words for {fact}`} />}
+      </main>
     </>
   )
 }
