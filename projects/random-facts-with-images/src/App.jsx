@@ -17,20 +17,8 @@ function App() {
         const { fact } = data
         setFact(fact)
 
-        const threeFirstWord = fact.split(' ', 3).join (' ')
-        console.log(threeFirstWord)
 
-        fetch(`${CAT_PREFIX_IMAGE_URL}/says/${threeFirstWord}?json=true`)
-          .then(res => res.json())
-          .then(data => {
-            console.log(data)
-            const { _id } = data
-            const url = `${CAT_PREFIX_IMAGE_URL}${_id}/says/${threeFirstWord}?fontSize=50&fontColor=white`
-            setImageUrl(url)
-          })
-//             fetch(`https://cataas.com/cat/says/${threeFirstWords}?json=true`)
-//                     setImageUrl(/cat/fqdyCwZeH7IJn7P6/says/hello?fontSize=50&fontColor=white`);
-//  https://cataas.com/cat/fqdyCwZeH7IJn7P6/says/hello?fontSize=50&fontColor=white
+
 
 
       } catch (error) {
@@ -40,6 +28,22 @@ function App() {
 
     getRandomFact()
   }, [])
+
+  useEffect(() => {
+    if(!fact) return
+
+    const threeFirstWord = fact.split(' ', 3).join (' ')
+    console.log(threeFirstWord)
+
+     fetch(`${CAT_PREFIX_IMAGE_URL}/says/${threeFirstWord}?json=true`)
+      .then(res => res.json())
+      .then(data => {
+        console.log(data)
+        const { _id } = data
+        const url = `${CAT_PREFIX_IMAGE_URL}${_id}/says/${threeFirstWord}?fontSize=50&fontColor=white`
+        setImageUrl(url)
+      })
+  }, [fact])
 
 
 
