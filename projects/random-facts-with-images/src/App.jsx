@@ -7,10 +7,16 @@ function App() {
 
   useEffect(() => {
     const getRandomFact = async () => {
-      const response = await fetch(URL)
-      const data = await response.json()
-      const { fact } = data
-      setFact(fact)
+      try {
+        const response = await fetch(URL)
+        if(!response.ok) throw new Error('Hubo un error...')
+        const data = await response.json()
+        const { fact } = data
+        setFact(fact)
+
+      } catch (error) {
+        console.log(error)
+      }
     }
 
     getRandomFact()
