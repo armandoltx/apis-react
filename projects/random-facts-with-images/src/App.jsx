@@ -1,31 +1,14 @@
-import {useEffect, useState} from "react"
+import { useCatImage } from "./hooks/useCatImage"
+import { useCatFact } from "./hooks/useCatFact"
 import './App.css'
-import { getRandomFact } from "./services/facts"
-import { getRandomImage } from "./services/images"
-
 
 function App() {
-  const [fact, setFact] = useState()
-  const [imageUrl, setImageUrl] = useState()
-
-  useEffect(() => {
-    getRandomFact().then(newFact => setFact(newFact)) // getRandomFact devueolve una promesa por eso el then. tb se puede hacer async await
-    }, [])
-
-  useEffect(() => {
-    if(!fact) return
-
-    const threeFirstWord = fact.split(' ', 3).join (' ')
-    // console.log(threeFirstWord)
-    getRandomImage(threeFirstWord).then(newImageUrl => setImageUrl(newImageUrl))
-  }, [fact])
+  const { fact, refreshFact } = useCatFact()
+  const { imageUrl } = useCatImage({ fact })
 
   const handleClick = async () => {
-    const newFact = await getRandomFact()
-    setFact(newFact)
+    refreshFact()
   }
-
-
 
   return (
     <>
