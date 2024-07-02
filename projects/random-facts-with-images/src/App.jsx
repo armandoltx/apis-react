@@ -1,59 +1,28 @@
-import './App.css'
 import {useEffect, useState} from "react"
+import './App.css'
+import { getRandomFact } from "./services/facts"
+import { getRandomImage } from "./services/images"
 
-const CAT_ENDPOINT_RANDOM_FACT = "https://catfact.ninja/fact"
-const CAT_PREFIX_IMAGE_URL = "https://cataas.com/cat/"
 
 function App() {
   const [fact, setFact] = useState()
   const [imageUrl, setImageUrl] = useState()
 
   useEffect(() => {
-    const getRandomFact = async () => {
-      try {
-        const response = await fetch(CAT_ENDPOINT_RANDOM_FACT)
-        if(!response.ok) throw new Error('Hubo un error...')
-        const data = await response.json()
-        const { fact } = data
-        setFact(fact)
-      } catch (error) {
-        console.log(error)
-      }
-    }
-
-    getRandomFact()
-  }, [])
+    getRandomFact().then(newFact => setFact(newFact)) // getRandomFact devueolve una promesa por eso el then. tb se puede hacer async await
+    }, [])
 
   useEffect(() => {
     if(!fact) return
 
     const threeFirstWord = fact.split(' ', 3).join (' ')
-    console.log(threeFirstWord)
-
-    fetch(`${CAT_PREFIX_IMAGE_URL}/says/${threeFirstWord}?json=true`)
-    .then(res => res.json())
-    .then(data => {
-      console.log(data)
-      const { _id } = data
-      const url = `${CAT_PREFIX_IMAGE_URL}${_id}/says/${threeFirstWord}?fontSize=50&fontColor=white`
-      setImageUrl(url)
-    })
+    // console.log(threeFirstWord)
+    getRandomImage(threeFirstWord).then(newImageUrl => setImageUrl(newImageUrl))
   }, [fact])
 
-  const handleClick = () => {
-    const getRandomFact = async () => {
-      try {
-        const response = await fetch(CAT_ENDPOINT_RANDOM_FACT)
-        if(!response.ok) throw new Error('Hubo un error...')
-        const data = await response.json()
-        const { fact } = data
-        setFact(fact)
-      } catch (error) {
-        console.log(error)
-      }
-    }
-
-    getRandomFact()
+  const handleClick = async () => {
+    const newFact = await getRandomFact()
+    setFact(newFact)
   }
 
 
