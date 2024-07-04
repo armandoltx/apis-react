@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Movies } from './components/Movies'
-import {useMovies} from './hooks/useMovies'
+import { useMovies } from './hooks/useMovies'
+import { searchValidations } from './utils/validations'
 import './App.css'
 
 function App() {
@@ -10,30 +11,14 @@ function App() {
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    console.log({ search })
+    searchValidations(search).length > 0 ? setError(searchValidations(search)) : setError(null)
   }
 
   const handleChange = (event) => {
-  // para hacer las validaciones aqui en vez de un useeffect hay q tener en cuenta q el SuseSearch es asincrono por eso ponerlo en una variable (newSearch)
+  // para hacer las validaciones aqui en vez de un useeffect hay q tener en cuenta q el useSearch es asincrono por eso ponerlo en una variable (newSearch)
     const newSearch = event.target.value
     if(newSearch.startsWith(' ')) return
     setSearch(newSearch)
-    if (newSearch === '') {
-      setError('No se puede buscar una pelicula vacia')
-      return
-    }
-
-    if(newSearch.match(/^\d+$/)) {
-      setError('No se puede buscar una pelicula con un numero')
-      return
-    }
-
-    if(newSearch.length < 3) {
-      setError("Labusqueda tiene que ser mayor de 3 caracteres")
-      return
-    }
-
-    setError(null)
   }
 
   return (
