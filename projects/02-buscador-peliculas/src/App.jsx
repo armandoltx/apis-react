@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Movies } from './components/Movies'
 import {useMovies} from './hooks/useMovies'
 import './App.css'
@@ -14,27 +14,27 @@ function App() {
   }
 
   const handleChange = (event) => {
-    setQuery(event.target.value)
-  }
-
-  useEffect(() => {
-    if (query === '') {
+  // para hacer las validaciones aqui en vez de un useeffect hay q tener en cuenta q el setQuery es asincrono por eso ponerlo en una variable (newQuery)
+    const newQuery = event.target.value
+    if(newQuery.startsWith(' ')) return
+    setQuery(newQuery)
+    if (newQuery === '') {
       setError('No se puede buscar una pelicula vacia')
       return
     }
 
-    if(query.match(/^\d+$/)) {
+    if(newQuery.match(/^\d+$/)) {
       setError('No se puede buscar una pelicula con un numero')
       return
     }
 
-    if(query.length < 3) {
+    if(newQuery.length < 3) {
       setError("Labusqueda tiene que ser mayor de 3 caracteres")
       return
     }
 
     setError(null)
-  },[query])
+  }
 
   return (
     <div className="page">
@@ -42,7 +42,17 @@ function App() {
         <h1>Buscador de peliculas</h1>
 
         <form className='form' onSubmit={handleSubmit}>
-          <input onChange={handleChange} value={query} name='query' type="text" placeholder="Avengers, Star Wars..." />
+          <input
+            style={{
+              border: '1px solid transparent',
+              borderColor: error ? 'red' : 'transparent'
+            }}
+            onChange={handleChange}
+            value={query}
+            name='query'
+            type="text"
+            placeholder="Avengers, Star Wars..."
+          />
           <button type="submit">Buscar</button>
         </form>
         {error && <p style={{ color: 'red' }}>{error}</p>}
