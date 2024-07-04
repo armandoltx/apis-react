@@ -4,31 +4,31 @@ import {useMovies} from './hooks/useMovies'
 import './App.css'
 
 function App() {
-  const [query, setQuery] = useState('')
+  const [search, setSearch] = useState('')
   const [error, setError] = useState(null)
   const { movies } = useMovies()
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    console.log({ query })
+    console.log({ search })
   }
 
   const handleChange = (event) => {
-  // para hacer las validaciones aqui en vez de un useeffect hay q tener en cuenta q el setQuery es asincrono por eso ponerlo en una variable (newQuery)
-    const newQuery = event.target.value
-    if(newQuery.startsWith(' ')) return
-    setQuery(newQuery)
-    if (newQuery === '') {
+  // para hacer las validaciones aqui en vez de un useeffect hay q tener en cuenta q el SuseSearch es asincrono por eso ponerlo en una variable (newSearch)
+    const newSearch = event.target.value
+    if(newSearch.startsWith(' ')) return
+    setSearch(newSearch)
+    if (newSearch === '') {
       setError('No se puede buscar una pelicula vacia')
       return
     }
 
-    if(newQuery.match(/^\d+$/)) {
+    if(newSearch.match(/^\d+$/)) {
       setError('No se puede buscar una pelicula con un numero')
       return
     }
 
-    if(newQuery.length < 3) {
+    if(newSearch.length < 3) {
       setError("Labusqueda tiene que ser mayor de 3 caracteres")
       return
     }
@@ -48,8 +48,8 @@ function App() {
               borderColor: error ? 'red' : 'transparent'
             }}
             onChange={handleChange}
-            value={query}
-            name='query'
+            value={search}
+            name='search'
             type="text"
             placeholder="Avengers, Star Wars..."
           />
