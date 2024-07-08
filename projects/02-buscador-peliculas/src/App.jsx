@@ -5,12 +5,19 @@ import './App.css'
 
 
 function App() {
-  const { movies } = useMovies()
-  const { search, setSearch, error, setError, searchValidations } = useSearch
+  const { search, setSearch, error, setError, searchValidations } = useSearch()
+  const { movies, getMovies } = useMovies({search})
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    searchValidations(search).length > 0 ? setError(searchValidations(search)) : setError(null)
+    // console.log(newSearch)
+    // getMovies().then(res => {
+    //   res.json()
+    //   console.log("00000")
+    //   console.log(res)
+    // }).then(data => console.log(data))
+    // searchValidations(search).length > 0 ? setError(searchValidations(search)) : setError(null) need to fix this
+    if(!error) getMovies()
   }
 
   const handleChange = (event) => {
