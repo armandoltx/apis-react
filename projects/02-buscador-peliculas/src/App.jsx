@@ -2,11 +2,13 @@ import { Movies } from './components/Movies'
 import { useMovies } from './hooks/useMovies'
 import {useSearch} from './hooks/useSearch'
 import './App.css'
+import {useState} from 'react'
 
 
 function App() {
+  const[sort, setSort] = useState(false)
   const { search, setSearch, error, setError, searchValidations } = useSearch()
-  const { movies, getMovies, loading } = useMovies({search})
+  const { movies, getMovies, loading } = useMovies({ search, sort })
 
   const handleSubmit = (event) => {
     event.preventDefault()
@@ -18,6 +20,10 @@ function App() {
     // }).then(data => console.log(data))
     // searchValidations(search).length > 0 ? setError(searchValidations(search)) : setError(null) need to fix this
     if(!error) getMovies()
+  }
+
+  const handleSort = () => {
+    setSort(!sort)
   }
 
   const handleChange = (event) => {
@@ -43,6 +49,7 @@ function App() {
             type="text"
             placeholder="Avengers, Star Wars..."
           />
+          <input type="checkbox" onChange={handleSort} checked={sort} name="" id="" />
           <button type="submit">Buscar</button>
         </form>
         {error && <p style={{ color: 'red' }}>{error}</p>}
