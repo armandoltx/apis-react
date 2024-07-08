@@ -19,7 +19,7 @@ function App() {
     //   console.log(res)
     // }).then(data => console.log(data))
     // searchValidations(search).length > 0 ? setError(searchValidations(search)) : setError(null) need to fix this
-    if(!error) getMovies()
+    if(!error) getMovies({ search })
   }
 
   const handleSort = () => {
