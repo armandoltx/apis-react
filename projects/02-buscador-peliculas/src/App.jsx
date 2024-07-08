@@ -6,7 +6,7 @@ import './App.css'
 
 function App() {
   const { search, setSearch, error, setError, searchValidations } = useSearch()
-  const { movies, getMovies } = useMovies({search})
+  const { movies, getMovies, loading } = useMovies({search})
 
   const handleSubmit = (event) => {
     event.preventDefault()
@@ -48,7 +48,9 @@ function App() {
         {error && <p style={{ color: 'red' }}>{error}</p>}
       </header>
       <main>
-        <Movies movies={movies} />
+        {
+          loading ? <p>Cargando...</p> : <Movies movies={movies} />
+        }
       </main>
     </div>
   )
