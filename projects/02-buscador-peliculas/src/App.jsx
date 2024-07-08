@@ -2,13 +2,20 @@ import { Movies } from './components/Movies'
 import { useMovies } from './hooks/useMovies'
 import {useSearch} from './hooks/useSearch'
 import './App.css'
-import {useState} from 'react'
+import {useCallback, useState} from 'react'
+import debounce from 'just-debounce-it'
 
 
 function App() {
   const[sort, setSort] = useState(false)
   const { search, setSearch, error, setError, searchValidations } = useSearch()
   const { movies, getMovies, loading } = useMovies({ search, sort })
+
+  const debounceGetMovies = useCallback(
+    debounce(search => {
+      getMovies({search})
+    }, 300)
+    , [])
 
   const handleSubmit = (event) => {
     event.preventDefault()
@@ -30,6 +37,7 @@ function App() {
   // para hacer las validaciones aqui en vez de un useeffect hay q tener en cuenta q el useSearch es asincrono por eso ponerlo en una variable (newSearch)
     const newSearch = event.target.value
     setSearch(newSearch)
+    debounceGetMovies(newSearch)
   }
 
   return (
