@@ -1,13 +1,12 @@
-import { useState } from 'react'
 import { Movies } from './components/Movies'
 import { useMovies } from './hooks/useMovies'
-import { searchValidations } from './utils/validations'
+import {useSearch} from './hooks/useSearch'
 import './App.css'
 
+
 function App() {
-  const [search, setSearch] = useState('')
-  const [error, setError] = useState(null)
   const { movies } = useMovies()
+  const { search, setSearch, error, setError, searchValidations } = useSearch
 
   const handleSubmit = (event) => {
     event.preventDefault()
@@ -17,7 +16,6 @@ function App() {
   const handleChange = (event) => {
   // para hacer las validaciones aqui en vez de un useeffect hay q tener en cuenta q el useSearch es asincrono por eso ponerlo en una variable (newSearch)
     const newSearch = event.target.value
-    if(newSearch.startsWith(' ')) return
     setSearch(newSearch)
   }
 
