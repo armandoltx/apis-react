@@ -1,11 +1,14 @@
 import { ChangeEvent, FormEvent, useState } from "react"
 import type { SearchType } from "../types"
 import { countries } from "../data/countries"
+import Alert from "./Alert"
 export default function Form() {
   const [search, setSearch] = useState<SearchType>({
     city: '',
     country: ''
   })
+
+  const [error, setError] =useState('')
 
   const handleChange = (event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>) => {
     // console.log(event.target.value)
@@ -20,7 +23,9 @@ export default function Form() {
     //Validamos los campos
     // console.log(Object.values(search))
     if (Object.values(search).includes('')) {
-      console.log("Los campos estan vacios...")
+      // console.log("Los campos estan vacios...")
+      setError('Todos los campos son obligatorios')
+      return
     }
   }
 
@@ -59,6 +64,7 @@ export default function Form() {
         </select>
       </div>
       <input type="submit" value="Consultar Clima" />
+      {error && <Alert>{error}</Alert>}
     </form>
   )
 }
