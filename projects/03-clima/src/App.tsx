@@ -1,10 +1,11 @@
 import './App.css'
 import Form from "./components/Form"
 import WeatherDetail from './components/WeatherDetail'
+import Spinner from './components/Spinner'
 import { useWeather } from './hooks/useWeather'
 
 function App() {
-  const { weather, fetchWeather } = useWeather()
+  const { loading, weather, fetchWeather } = useWeather()
 
   const hasWeatherData = weather?.name?.length > 0
 
@@ -16,6 +17,7 @@ function App() {
         </div>
         <div className="main">
           <Form fetchWeather={fetchWeather}/>
+          { loading && <Spinner /> }
           { hasWeatherData && <WeatherDetail weather={weather}/> }
         </div>
       </div>
