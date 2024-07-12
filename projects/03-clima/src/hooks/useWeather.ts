@@ -27,11 +27,13 @@ export function useWeather() {
 
   const [loading, setLoading] = useState(false)
   const [weather, setWeather] = useState<Weather>(initialState)
+  const [notFound, setNotFound] = useState(false)
 
   const fetchWeather = async (search: SearchType) => {
     const apiKey = import.meta.env.VITE_API_KEY
     setLoading(true)
     setWeather(initialState)
+    setNotFound(false)
 
     try {
       const geoResponse = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${search.city},${search.country}&appid=${apiKey}`)
@@ -39,7 +41,12 @@ export function useWeather() {
       if (!geoResponse.ok) throw new Error('Hubo un error con la API...')
 
       const geoData = await geoResponse.json()
-      console.log(geoData)
+      // Comprobar si existe
+      if(!geoData[0]) {
+        setNotFound(true)
+        return
+      }
+
       const lat = geoData[0].lat
       const lon = geoData[0].lon
       console.log(lat, lon)
@@ -63,5 +70,5 @@ export function useWeather() {
     }
   }
 
-  return { loading, weather, fetchWeather }
+  return { loading, weather, fetchWeather, notFound }
 }

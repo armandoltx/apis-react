@@ -19,6 +19,7 @@ export default function Form({ fetchWeather }) {
       ...search,
       [event.target.name]: event.target.value
     })
+    setError('')
   }
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
