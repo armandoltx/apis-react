@@ -14,21 +14,24 @@ const WeatherSchema = z.object({  // es un objeto pq la API devuelve un objeto -
 
 export type Weather = z.infer<typeof WeatherSchema>
 
+const initialState = {
+  name: '',
+  main: {
+    temp: 0,
+    temp_min: 0,
+    temp_max: 0
+  }
+}
+
 export function useWeather() {
 
   const [loading, setLoading] = useState(false)
-  const [weather, setWeather] = useState<Weather>({
-    name: '',
-    main: {
-      temp: 0,
-      temp_min: 0,
-      temp_max: 0
-    }
-  })
+  const [weather, setWeather] = useState<Weather>(initialState)
 
   const fetchWeather = async (search: SearchType) => {
     const apiKey = import.meta.env.VITE_API_KEY
     setLoading(true)
+    setWeather(initialState)
 
     try {
       const geoResponse = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${search.city},${search.country}&appid=${apiKey}`)
