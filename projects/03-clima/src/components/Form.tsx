@@ -2,18 +2,16 @@ import { ChangeEvent, FormEvent, useState } from "react"
 import { z } from 'zod'
 import type { SearchType } from "../types"
 import { countries } from "../data/countries"
-import { useWeather } from "../hooks/useWeather"
 import Alert from "./Alert"
 
 
-export default function Form() {
+export default function Form({ fetchWeather }) {
   const [search, setSearch] = useState<SearchType>({
     city: '',
     country: ''
   })
 
   const [error, setError] = useState('')
-  const { fetchWeather } = useWeather()
 
   const handleChange = (event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>) => {
     // console.log(event.target.value)

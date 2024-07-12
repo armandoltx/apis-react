@@ -1,8 +1,10 @@
 import './App.css'
 import Form from "./components/Form"
 import WeatherDetail from './components/WeatherDetail'
+import { useWeather } from './hooks/useWeather'
 
 function App() {
+  const { weather, fetchWeather } = useWeather()
 
   return (
     <>
@@ -11,8 +13,8 @@ function App() {
         <h1>Buscador de Clima</h1>
         </div>
         <div className="main">
-          <Form />
-          <WeatherDetail />
+          <Form fetchWeather={fetchWeather}/>
+          <WeatherDetail weather={weather}/>
         </div>
       </div>
     </>

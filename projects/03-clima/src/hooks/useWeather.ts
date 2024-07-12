@@ -12,7 +12,7 @@ const WeatherSchema = z.object({  // es un objeto pq la API devuelve un objeto -
   })
 })
 
-type Weather = z.infer<typeof WeatherSchema>
+export type Weather = z.infer<typeof WeatherSchema>
 
 export function useWeather() {
 
@@ -58,5 +58,5 @@ export function useWeather() {
     }
   }
 
-  return { fetchWeather }
+  return { weather, fetchWeather }
 }
