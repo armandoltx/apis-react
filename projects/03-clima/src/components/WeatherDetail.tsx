@@ -1,4 +1,5 @@
 import { Weather } from "../hooks/useWeather"
+import { formatTemperature } from "../utils"
 
 type WeatherDetailProps = {
   weather: Weather  //importamos ==> export type Weather = z.infer<typeof WeatherSchema>
@@ -10,10 +11,10 @@ export default function WeatherDetail({ weather }: WeatherDetailProps) {
     <>
       <div className="results">
         <h2>Clima de: {weather.name}</h2>
-        <p className="current">Temperatura Actual: {weather.main.temp}&deg;</p>
+        <p className="current">Temperatura Actual: {formatTemperature(weather.main.temp)}&deg;</p>
         <div className="min-max-temp">
-          <p>Min: {weather.main.temp_min}&deg;</p>
-          <p>Max: {weather.main.temp_max}&deg;</p>
+          <p>Min: {formatTemperature(weather.main.temp_min)}&deg;</p>
+          <p>Max: {formatTemperature(weather.main.temp_max)}&deg;</p>
         </div>
       </div>
     </>
