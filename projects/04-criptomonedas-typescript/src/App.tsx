@@ -1,4 +1,4 @@
-
+import { currencies } from "./data/index"
 
 function App() {
 
@@ -13,7 +13,15 @@ function App() {
             name="currency"
             id="currency"
           >
-              <option value="">-- Selecciona una Moneda --</option>
+            <option value="">-- Selecciona una Moneda --</option>
+            {currencies.map(country => (
+              <option
+                key={country.code}
+                value={country.name}
+                >
+                  {country.name}
+                </option>
+            ))}
             </select>
         </div>
         <div>
