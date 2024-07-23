@@ -1,16 +1,20 @@
-import { useEffect, useState } from "react"
+import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 import { currencies } from "./data/index"
 import { CryptoCurrenciesResponseSchema } from "./schema/schema"
+import { Pair } from "./types"
 
 function App() {
-  const [currency, setCurrency] = useState('')
+  const [pair, setPair] = useState<Pair>({
+    currency: '',
+    criptocurrency: ''
+  })
   const [cryptoCurrencies, setCryptoCurrencies] = useState([])
 
   useEffect(() => {
-    if(!currency) return
+    if(!pair.currency) return
     console.log("dentro del useEffect")
-    fetchCryptos(currency)
-  }, [currency])
+    fetchCryptos(pair.currency)
+  }, [pair.currency])
 
   const fetchCryptos = async (currency: string) => {
     console.log("000000")
@@ -36,17 +40,21 @@ function App() {
     }
   }
 
-  const handleChange = (event) => {
+  const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
     // console.log(event.target.value)
-    setCurrency(
-      event.target.value
-    )
+    // setCurrency(
+    //   event.target.value
+    // )
+    setPair({
+      ...pair,
+      [event.target.name]: event.target.value
+    })
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    console.log(currency)
-    if (!currency.length) return
+    // console.log(currency)
+    // if (!currency.length) return
   }
 
   console.log("aqui aqui aqui")
@@ -77,10 +85,11 @@ function App() {
             </select>
         </div>
         <div>
-          <label htmlFor="cripto-currency">Criptomoneda</label>
+          <label htmlFor="criptocurrency">Criptomoneda</label>
           <select
-            name="cripto-currency"
-            id="cripto-currency"
+            name="criptocurrency"
+            id="criptocurrency"
+            onChange={handleChange}
           >
             <option value="">-- Selecciona una Criptomoneda --</option>
             {cryptoCurrencies && cryptoCurrencies.map((crypto) => (
