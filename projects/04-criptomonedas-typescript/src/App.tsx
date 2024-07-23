@@ -1,7 +1,7 @@
-import { ChangeEvent, FormEvent, useEffect, useState } from "react"
+import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from "react"
 import { currencies } from "./data/index"
-import { CryptoCurrenciesResponseSchema } from "./schema/schema"
-import { Pair } from "./types"
+import { CryptoCurrenciesResponseSchema, CryptoDataSchema } from "./schema/schema"
+import { CryptoData, Pair } from "./types"
 
 function App() {
   const [pair, setPair] = useState<Pair>({
@@ -9,6 +9,19 @@ function App() {
     criptocurrency: ''
   })
   const [cryptoCurrencies, setCryptoCurrencies] = useState([])
+  const [error, setError] = useState('')
+
+  const [cryptoData, setCryptoData] = useState<CryptoData>({
+    IMAGEURL: '',
+    PRICE: '',
+    HIGHDAY: '',
+    LOWDAY: '',
+    CHANGE24HOUR: '',
+    LASTUPDATE: ''
+
+  })
+
+  const hasResult = useMemo(() => (!Object.values(cryptoData).includes('')), [cryptoData])
 
   useEffect(() => {
     if(!pair.currency) return
@@ -40,11 +53,26 @@ function App() {
     }
   }
 
+  const fetchCryptoData = async (pair: Pair) => {
+    console.log(pair)
+    try {
+      const response = await fetch(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${pair.criptocurrency}&tsyms=${pair.currency}`)
+      if(!response.ok) throw new Error('Hubo un error fetching data...')
+      const data = await response.json()
+      console.log(data)
+      console.log(data.DISPLAY[pair.criptocurrency][pair.currency])
+      const result = CryptoDataSchema.safeParse(data.DISPLAY[pair.criptocurrency][pair.currency])
+      // console.log(result)
+      if(result.success) {
+        // console.log(result.data)
+        setCryptoData(result.data)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    // console.log(event.target.value)
-    // setCurrency(
-    //   event.target.value
-    // )
     setPair({
       ...pair,
       [event.target.name]: event.target.value
@@ -53,12 +81,21 @@ function App() {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    // console.log(currency)
-    // if (!currency.length) return
+    // Validacion
+    if(Object.values(pair).includes('')) {
+      setError('Todos los campos son obligatorios')
+      return
+    }
+
+    setError('')
+
+    // consultar la API
+    fetchCryptoData(pair)
+
   }
 
-  console.log("aqui aqui aqui")
-  console.log(cryptoCurrencies[0])
+  // console.log("aqui aqui aqui")
+  // console.log(cryptoCurrencies[0])
 
   return (
     <>
@@ -71,6 +108,7 @@ function App() {
           <select
             name="currency"
             id="currency"
+            value={pair.currency}
             onChange={handleChange}
           >
             <option value="">-- Selecciona una Moneda --</option>
@@ -89,6 +127,7 @@ function App() {
           <select
             name="criptocurrency"
             id="criptocurrency"
+            value={pair.criptocurrency}
             onChange={handleChange}
           >
             <option value="">-- Selecciona una Criptomoneda --</option>
@@ -104,7 +143,28 @@ function App() {
         </div>
 
         <input type="submit" value="Cotizar" />
+        {error}
       </form>
+      {hasResult && (
+        <>
+          <div className="wraper-resultado">
+            <h2>Cotizacion</h2>
+            <div className="resultado">
+              <div className="imagen">
+                <img
+                  src={`https://cryptocompare.com/${cryptoData.IMAGEURL}`}
+                  alt="Imagen cryptomoneda"
+                />
+              </div>
+              <p>El precio es de: <span>{cryptoData.PRICE}</span></p>
+              <p>El precio mas alto del dia: <span>{cryptoData.HIGHDAY}</span></p>
+              <p>El precio mas bajo del dia: <span>{cryptoData.LOWDAY}</span></p>
+              <p>Variacion ultimas 24 horas: <span>{cryptoData.CHANGE24HOUR}</span></p>
+              <p>Ultima vez que se actualizo: <span>{cryptoData.LASTUPDATE}</span></p>
+            </div>
+          </div>
+        </>
+      )}
     </>
   )
 }
