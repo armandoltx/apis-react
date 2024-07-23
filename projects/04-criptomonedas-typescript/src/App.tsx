@@ -2,6 +2,7 @@ import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from "react"
 import { currencies } from "./data/index"
 import { CryptoCurrenciesResponseSchema, CryptoDataSchema } from "./schema/schema"
 import { CryptoData, Pair } from "./types"
+import Spinner from "./components/Spinner"
 
 function App() {
   const [pair, setPair] = useState<Pair>({
@@ -10,7 +11,6 @@ function App() {
   })
   const [cryptoCurrencies, setCryptoCurrencies] = useState([])
   const [error, setError] = useState('')
-
   const [cryptoData, setCryptoData] = useState<CryptoData>({
     IMAGEURL: '',
     PRICE: '',
@@ -18,8 +18,8 @@ function App() {
     LOWDAY: '',
     CHANGE24HOUR: '',
     LASTUPDATE: ''
-
   })
+  const [loading, setLoading] = useState(false)
 
   const hasResult = useMemo(() => (!Object.values(cryptoData).includes('')), [cryptoData])
 
@@ -31,6 +31,7 @@ function App() {
 
   const fetchCryptos = async (currency: string) => {
     console.log("000000")
+    setLoading(true)
     // if (!currency) return
     try {
       const response = await fetch(`https://min-api.cryptocompare.com/data/top/mktcapfull?limit=20&tsym=${currency}`)
@@ -50,11 +51,14 @@ function App() {
       }
     } catch (error) {
       console.log(error)
+    } finally {
+      setLoading(false)
     }
   }
 
   const fetchCryptoData = async (pair: Pair) => {
     console.log(pair)
+    setLoading(true)
     try {
       const response = await fetch(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${pair.criptocurrency}&tsyms=${pair.currency}`)
       if(!response.ok) throw new Error('Hubo un error fetching data...')
@@ -69,7 +73,7 @@ function App() {
       }
     } catch (error) {
       console.log(error)
-    }
+    } finally {setLoading(false)}
   }
 
   const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
@@ -145,7 +149,7 @@ function App() {
         <input type="submit" value="Cotizar" />
         {error}
       </form>
-      {hasResult && (
+      { loading ? <Spinner /> : hasResult && (
         <>
           <div className="wraper-resultado">
             <h2>Cotizacion</h2>
