@@ -1,11 +1,24 @@
 import { ChangeEvent, FormEvent, useState } from "react"
 import { currencies } from "../data/index"
 import { useCrypto } from "../hooks/useCrypto"
+import { fetchCryptoData } from "../services/cryptoData"
+import { Pair } from "../types"
 
 export default function Form({ setLoading, setCryptoData }) {
 
+  const [pair, setPair] = useState<Pair>({
+    currency: '',
+    criptocurrency: ''
+  })
   const [error, setError] = useState('')
-  const { pair, setPair, cryptoCurrencies, fetchCryptoData } = useCrypto({ setLoading })
+  const { cryptoCurrencies } = useCrypto({ setLoading , pair})
+
+  const cryptoData = async () => {
+    setLoading(true)
+    const data = await fetchCryptoData(pair)
+    setCryptoData(data)
+    setLoading(false)
+  }
 
   const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setPair({
@@ -23,7 +36,7 @@ export default function Form({ setLoading, setCryptoData }) {
     }
     setError('')
     // consultar la API
-    fetchCryptoData(pair)
+    cryptoData()
   }
 
   return (
