@@ -2,9 +2,14 @@ import { ChangeEvent, FormEvent, useState } from "react"
 import { currencies } from "../data/index"
 import { useCrypto } from "../hooks/useCrypto"
 import { fetchCryptoData } from "../services/cryptoData"
-import { Pair } from "../types"
+import { Pair, CryptoData } from "../types"
 
-export default function Form({ setLoading, setCryptoData }) {
+interface FormProps {
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+  setCryptoData: React.Dispatch<React.SetStateAction<CryptoData>>
+}
+
+export default function Form({ setLoading, setCryptoData }: FormProps) {
 
   const [pair, setPair] = useState<Pair>({
     currency: '',
@@ -16,7 +21,7 @@ export default function Form({ setLoading, setCryptoData }) {
   const cryptoData = async () => {
     setLoading(true)
     const data = await fetchCryptoData(pair)
-    setCryptoData(data)
+    if(data) setCryptoData(data)
     setLoading(false)
   }
 
