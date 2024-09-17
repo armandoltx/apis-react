@@ -5,6 +5,7 @@ import {useState} from 'react'
 import {Header} from './components/Header.jsx'
 import { Footer } from './components/Footer.jsx'
 import { useFilters } from './hooks/useFilters.js'
+import {Cart} from './components/Cart.jsx'
 
 function App() {
   const [products] = useState(initialProducts)
@@ -14,6 +15,7 @@ function App() {
   return (
     <>
       <Header/>
+      <Cart />
       <Products products={filteredProducts}/>
       <Footer />
     </>
